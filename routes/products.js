@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, getProductsCount } from '../controllers/productController.js'
+import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, getProductsCount, getFeaturedProducts, getFeaturedProductsWithCount } from '../controllers/productsController.js'
 
 const router = express.Router()
 
@@ -18,7 +18,10 @@ router.put('/:id', updateProduct)
 
 //delete a Product
 router.delete('/:id', deleteProduct)
-
+//get featured Products
+router.get('/get/featured', getFeaturedProducts)
+router.get('/get/featured/:count', getFeaturedProductsWithCount)
+//get Products count
 router.get('/get/count', getProductsCount)
 
 
