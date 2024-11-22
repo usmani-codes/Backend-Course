@@ -5,11 +5,7 @@ import Category from '../models/category.js'
 const getCategories = async (req, res, next) => {
     const categories = await Category.find({})
 
-    console.log("categories: ", categories)
-
-    //server crashes when there's no category in categories. it's an empty array [] and []'s value is true the below condition doesn't execute
-    // should not we be checking its length ? categories.length <= 0 || categories.length === 0
-    if (!categories) {
+    if (!categories.length) {
         return res.status(404).json({ success: false, message: 'no Categories found' })
     }
 
@@ -17,7 +13,7 @@ const getCategories = async (req, res, next) => {
 }
 
 // @desc Get category by id
-// @route GET /api/v1/categories
+// @route GET /api/v1/categories/:id
 const getCategory = async (req, res, next) => {
     const { id } = req.params
     const category = await Category.findOne({ _id: id })
@@ -31,7 +27,7 @@ const getCategory = async (req, res, next) => {
     res.json({ success: true, data: category })
 }
 
-// @desc Create a new Post
+// @desc Create a new category
 // @route POST /api/v1/categories
 const createCategory = async (req, res, next) => {
     const { name, icon, color } = req.body
@@ -47,7 +43,7 @@ const createCategory = async (req, res, next) => {
     }
 
     const newCategory = new Category({ name, icon, color })
-    newCategory.save()
+    await newCategory.save()
 
     if (!newCategory) {
         res.status(404).json({ success: false, message: 'the category cannot be created!' })
@@ -57,7 +53,7 @@ const createCategory = async (req, res, next) => {
 }
 
 
-// @desc update a Post by id
+// @desc update a category by id
 // @route PUT /api/v1/categories/:id
 const updateCategory = async (req, res, next) => {
     const { id } = req.params
@@ -72,7 +68,7 @@ const updateCategory = async (req, res, next) => {
     res.status(201).json({ msg: 'category updated ', data: category })
 }
 
-// @desc delete a Post by id
+// @desc delete a category by id
 // @route DELETE /api/v1/categories/:id
 const deleteCategory = async (req, res, next) => {
     const { id } = req.params

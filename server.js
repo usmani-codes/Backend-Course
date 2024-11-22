@@ -18,7 +18,7 @@ import errorHandler from './middlewares/errorHandler.js'
 import { connectDB } from './utils/connectDB.js'
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 const api = process.env.API_URI
 
 //middlewares
@@ -32,8 +32,8 @@ app.use(logger)
 // routes
 app.use(`${api}/categories`, categories)
 app.use(`${api}/products`, products)
-app.use(`${api}/orders`, orders)
 app.use(`${api}/users`, users)
+app.use(`${api}/orders`, orders)
 
 
 // middilewares
