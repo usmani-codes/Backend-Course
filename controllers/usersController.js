@@ -1,48 +1,13 @@
 import mongoose from 'mongoose'
-import {User} from '../models/user.js'
-
 import bcypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
 
-
-
-const login = async(req,res,next) => {
-
-    const jwtSecret = process.env.JWT_SECRET
-
-    const {email,password } = req.body
-    if(!email || !password ) {
-        return res.status(401).json({success:false, msg:'please provide all required fields'})
-    }
-
-    const user = await User.findOne({email:email}).select("+hashedPassword")
-
-    if(!user) {
-      return res.status(404).json({success:false, msg:'user with this email not found'})
-    }
-
-    const passwordMatched = await bcypt.compare(password, user.hashedPassword)
-
-    if(!passwordMatched) {
-         return res.status(401).json({success:false, msg:'incorrect email or password'})
-    }
-
-    user.hashedPassword = ''
-
-    const token = jwt.sign({email},jwtSecret)
-
-    res.status(200).json({success:true, data:user, token})
-
- }
-
+import { User } from '../models/user.js'
 
 
 // @desc Get all users
 // @route GET /api/v1/users
 const getUsers = async (req, res, next) => {
 
-    console.log('hello world getUsers')
-    
     const users = await User.find({})
 
     console.log("users: ", users)
@@ -59,9 +24,9 @@ const getUsers = async (req, res, next) => {
 const getUser = async (req, res, next) => {
     const { id } = req.params
     const isValidUser = mongoose.isValidObjectId(id)
-    
-    if(!isValidUser){
-        return res.status(400).json({success:false, msg:'not a valid id'})
+
+    if (!isValidUser) {
+        return res.status(400).json({ success: false, msg: 'not a valid id' })
     }
 
     const user = await User.findOne({ _id: id })
@@ -77,7 +42,7 @@ const getUser = async (req, res, next) => {
 // @desc Create a new user
 // @route POST /api/v1/users
 const createUser = async (req, res, next) => {
-    const { name, email, password, phone,isAdmin,street,apartment,city,zip,country } = req.body
+    const { name, email, password, phone, isAdmin, street, apartment, city, zip, country } = req.body
 
     if (!name || !email || !password || !phone) {
         return res.status(400).json({ success: false, msg: 'please fill all required fields' })
@@ -89,7 +54,7 @@ const createUser = async (req, res, next) => {
         return res.status(401).json({ success: false, message: 'the user already exists!' })
     }
 
-    const hashedPassword = await bcypt.hash(password,10)
+    const hashedPassword = await bcypt.hash(password, 10)
 
     console.log("hashed: ", hashedPassword)
 
@@ -101,9 +66,9 @@ const createUser = async (req, res, next) => {
         res.status(400).json({ success: false, message: 'the user cannot be created!' })
     }
 
-    
+
     newUser.hashedPassword = ''
-    return res.status(201).json({ success: true, msg:"user creatd", data: newUser })
+    return res.status(201).json({ success: true, msg: "user creatd", data: newUser })
 }
 
 
@@ -112,13 +77,18 @@ const createUser = async (req, res, next) => {
 // @route PUT /api/v1/users/:id
 const updateUser = async (req, res, next) => {
     const { id } = req.params
-    const { name, icon, color } = req.body
+    const { name, email, password, phone, isAdmin, street, apartment, city, zip, country } = req.body
 
-    if(!mongoose.isValidObjectId(id)){
-         return res.status(404).json({ success: false, msg: 'not a valid id' })
+    if (!mongoose.isValidObjectId(id)) {
+        return res.status(404).json({ success: false, msg: 'not a valid id' })
     }
 
-    const user = await User.findOneAndUpdate({ _id: id }, { name, icon, color }, { new: true })
+    //extra for now ...
+    if (req.body.email || req.body.id) {
+        return res.json({ success: false, msg: "can't change email for now" })
+    }
+
+    const user = await User.findOneAndUpdate({ _id: id }, { name, password, phone, isAdmin, street, apartment, city, zip, country }, { new: true })
 
     if (!user) {
         return res.status(404).json({ success: false, msg: 'user with this id not found' })
@@ -134,8 +104,8 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
     const { id } = req.params
 
-    if(!mongoose.isValidObjectId(id)){
-         return res.status(404).json({ success: false, message: `not a valid id` })
+    if (!mongoose.isValidObjectId(id)) {
+        return res.status(404).json({ success: false, message: `not a valid id` })
     }
 
     const user = await User.findOneAndDelete({ _id: id })
@@ -143,7 +113,6 @@ const deleteUser = async (req, res, next) => {
     if (!user) {
         return res.status(404).json({ success: true, message: `user not found` })
     }
-
     const users = await User.find({})
 
     res.status(200).json({ success: true, message: `user deleted`, user: users })
@@ -157,4 +126,4 @@ const getUsersCount = async (req, res, next) => {
     res.status(200).json({ success: true, totalUsers: users })
 }
 
-export { login,getUsers, getUser, createUser, updateUser, deleteUser, getUsersCount }
+export { getUsers, getUser, createUser, updateUser, deleteUser, getUsersCount }

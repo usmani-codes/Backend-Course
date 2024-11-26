@@ -1,6 +1,6 @@
 import colors from 'colors' // Import colors is neccaesary to use colors in console.log
 
-const logger = (req, res, next) => {
+export const logger = (req, res, next) => {
     const colorMethod = {
         GET: 'green',
         POST: 'yellow',
@@ -13,4 +13,3 @@ const logger = (req, res, next) => {
     next()
 }
 
-export default logger

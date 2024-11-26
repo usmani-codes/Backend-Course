@@ -1,6 +1,7 @@
 import express from "express";
 
-import { getOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersCount } from '../controllers/ordersController.js'
+import { getOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersCount, getTotalSales, getUserOrders, getUserOrdersCount } from '../controllers/ordersController.js'
+import { AdminsOnly } from "../middlewares/adminOnly.js";
 
 const router = express.Router()
 
@@ -14,11 +15,20 @@ router.get('/:id', getOrder)
 router.post('/', createOrder)
 
 //update a Order
-router.put('/:id', updateOrder)
+router.put('/:id', AdminsOnly, updateOrder)
 
 //delete a Order
-router.delete('/:id', deleteOrder)
+router.delete('/:id', AdminsOnly, deleteOrder)
 
+//get all orders of a user
+router.get('/get/userorders/:id', getUserOrders)
+
+//get user's orders count
+router.get('/get/userorders/count/:id', getUserOrdersCount)
+
+// get total sales
+router.get('/get/sales', getTotalSales)
+//get total orders count
 router.get('/get/count', getOrdersCount)
 
 

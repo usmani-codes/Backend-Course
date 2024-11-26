@@ -8,14 +8,16 @@ import products from './routes/products.js'
 import orders from './routes/orders.js'
 import categories from './routes/categories.js'
 import users from './routes/users.js'
+import auth from './routes/auth.js'
 
 // middlewares
-import notFound from './middlewares/notFound.js'
-import logger from './middlewares/logger.js'
-import errorHandler from './middlewares/errorHandler.js'
+import { AdminsOnly, AUTH, logger, notFound, } from './middlewares/index.js'
+import errorHandler from './middlewares/index.js'
+
 
 //utils
 import { connectDB } from './utils/connectDB.js'
+
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -31,9 +33,11 @@ app.use(logger)
 
 // routes
 app.use(`${api}/categories`, categories)
-app.use(`${api}/products`, products)
-app.use(`${api}/users`, users)
-app.use(`${api}/orders`, orders)
+app.use(`${api}/products`, AUTH, AdminsOnly, products)
+app.use(`${api}/auth`, auth)
+app.use(`${api}/users`, AUTH, AdminsOnly, users)
+app.use(`${api}/orders`, AUTH, orders)
+
 
 
 // middilewares

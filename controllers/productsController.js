@@ -6,14 +6,14 @@ import { getCategories } from "./categoriesController.js"
 // @desc Get all products
 // @route GET /api/v1/products
 const getProducts = async (req, res, next) => {
-
-    const {categories} = req.query
+    const { categories } = req.query
     let filterObj = {}
 
-    if(categories){
-        filterObj = {category:categories.split(',')}
+    if (categories) {
+        filterObj = { category: categories.split(',') }
     }
 
+    console.log("filterObj", filterObj)
 
     const products = await Product.find(filterObj).populate("category")
 
@@ -41,7 +41,7 @@ const getProduct = async (req, res, next) => {
 
 
 // @desc Create a product
-// @route PRODUCT /api/v1/products
+// @route POST /api/v1/products
 const createProduct = async (req, res, next) => {
     const { name, description, price, category, richDescription, image, images, brand, rating, numOfReviews, isFeatured, countInStock } = req.body
 

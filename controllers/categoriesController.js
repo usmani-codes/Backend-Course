@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import Category from '../models/category.js'
 
 // @desc Get all categories
@@ -9,7 +10,7 @@ const getCategories = async (req, res, next) => {
         return res.status(404).json({ success: false, message: 'no Categories found' })
     }
 
-    res.json({ success: true, data: categories })
+    return res.json({ success: true, data: categories })
 }
 
 // @desc Get category by id
@@ -24,7 +25,7 @@ const getCategory = async (req, res, next) => {
         return res.status(404).json({ success: false, message: 'no Category found with this id' })
     }
 
-    res.json({ success: true, data: category })
+    return res.json({ success: true, data: category })
 }
 
 // @desc Create a new category
@@ -73,7 +74,9 @@ const updateCategory = async (req, res, next) => {
 const deleteCategory = async (req, res, next) => {
     const { id } = req.params
 
-    // crashing server with error when I pass shorter id 
+    if (!mongoose.isValidObjectId(id)) {
+        return res.status(404).json({ success: false, msg: "invalid Id" })
+    }
 
     const category = await Category.findOneAndDelete({ _id: id })
     console.log("category: ", category)
@@ -89,8 +92,8 @@ const deleteCategory = async (req, res, next) => {
 // @desc get categories total count
 // @route GET /api/v1/categories/get/count
 const getCategoriesCount = async (req, res, next) => {
-    const categories = await Category.find({})
-    res.status(200).json({ success: true, message: `total categories are: ${categories.length}` })
+    const categories = await Category.countDocuments()
+    res.status(200).json({ success: true, totalCategories: categories })
 }
 
 export { getCategories, getCategory, createCategory, updateCategory, deleteCategory, getCategoriesCount }

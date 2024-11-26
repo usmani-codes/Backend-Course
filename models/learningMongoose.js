@@ -90,4 +90,10 @@ const Author = mongoose.model("Author", authorSchema);
 // giving back the updated obj rather the old one
 const category = await Category.findOneAndUpdate({ _id: id }, { name, icon, color }, { new: true })
 
+const orders = await Order.find({}).populate('user', "name email") //user -> id  name email -> just the two fields from user
+
+// orderItem has product ids so we have to populate product -> product has id of category so populating the category .
+// read as orderItems mai product ko populate kro orr product mai category ko orr vise versa
+const order = await Order.findOne({ _id: id }).populate("user").populate({ path: "orderItems", populate: { path: "product", populate: { path: "category", populate: 'anotherone' } } })
+
 
