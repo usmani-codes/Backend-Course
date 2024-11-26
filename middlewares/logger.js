@@ -9,7 +9,7 @@ export const logger = (req, res, next) => {
     }
 
     const color = colorMethod[req.method] || 'white'
-    console.log(`${req.method} ${req.protocol}://${req.hostname}${req.originalUrl}`[color])
+    console.log(`${req.method} ${req.protocol}://${req.hostname}:${req.socket.localPort}${req.originalUrl}`[color])
     next()
 }
 

@@ -7,6 +7,5 @@ export const AdminsOnly = async (req, res, next) => {
     } else {
         return res.status(401).json({ success: false, message: 'un-authorized!! admins only' })
     }
-
     next()
 }

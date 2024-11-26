@@ -6,6 +6,8 @@ import { User } from '../models/user.js'
 
 const login = async (req, res, next) => {
 
+    console.log("in login..")
+
     const jwtSecret = process.env.JWT_SECRET
 
     const { email, password } = req.body
