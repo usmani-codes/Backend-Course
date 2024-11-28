@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getUsers, getUser, createUser, updateUser, deleteUser, getUsersCount } from '../controllers/usersController.js'
+import { getUsers, getUser, updateUser, deleteUser, getUsersCount } from '../controllers/usersController.js'
 import { AdminsOnly } from '../middlewares/index.js'
 
 const router = express.Router()
@@ -11,8 +11,8 @@ router.get('/', getUsers)
 //get single User
 router.get('/:id', getUser)
 
-//create a User
-router.post('/', createUser)
+// //create a User
+// router.post('/', createUser)
 
 //update a User
 router.put('/:id', updateUser)

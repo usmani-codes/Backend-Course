@@ -8,6 +8,8 @@ import orders from './routes/orders.js'
 import categories from './routes/categories.js'
 import users from './routes/users.js'
 import auth from './routes/auth.js'
+import chat from './routes/chat.js'
+
 
 // middlewares
 import { AdminsOnly, AUTH, logger, notFound, } from './middlewares/index.js'
@@ -41,10 +43,12 @@ app.use(logger)
 
 // routes 
 app.use(`${api}/categories`, categories)
-app.use(`${api}/products`, products)
+app.use(`${api}/products`,AUTH, products)
 app.use(`${api}/auth`, auth)
-app.use(`${api}/users`, AUTH, AdminsOnly, users)
-app.use(`${api}/orders`, AUTH, orders)
+app.use(`${api}/users`,AUTH,AdminsOnly, users)
+app.use(`${api}/orders`,AUTH, orders)
+app.use(`${api}/chat`, AUTH, chat)
+
 
 
 

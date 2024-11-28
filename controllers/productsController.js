@@ -29,6 +29,11 @@ const getProducts = async (req, res, next) => {
 // @route GET /api/v1/products/:id
 const getProduct = async (req, res, next) => {
   const id = req.params.id;
+
+  if(!mongoose.isValidObjectId(id)){
+    return res.status(400).json({success:false,msg:'invalid id..'})
+  } 
+
   const product = await Product.findOne({ _id: id }).populate("category");
   if (!product) {
     const error = new Error(`a product with id: ${id} was not found`);
